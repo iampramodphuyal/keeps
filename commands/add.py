@@ -19,7 +19,10 @@ def config():
         raise typer.Exit(code=1)
     region = typer.prompt("Enter Region(eu-central-1)", default="eu-central-1")
     bucketName = typer.prompt("Enter Bucket Name", default=None)
-    insert(configName, secretKey, accessKey, region, bucketName)
+    if insert(configName, secretKey, accessKey, region, bucketName):
+        typer.secho("Credential Saved Successfully!", fg=typer.colors.GREEN)
+    else:
+        typer.secho("Failed to Save credentials!", fg=typer.colors.RED)
 
 if __name__ == "__main__":
     addApp()

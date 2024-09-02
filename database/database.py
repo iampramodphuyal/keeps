@@ -1,5 +1,4 @@
 import sqlite3
-import typer
 
 DATABASE_NAME = 'creds.db'
 DATABASE_TABLE = 'creds'
@@ -25,12 +24,12 @@ def drop_db():
     cursor = conn.cursor()
     query = f'''DROP TABLE {DATABASE_TABLE}'''
     try:
-        cursor.execute(query)
+        # cursor.execute(query)
         conn.commit()
         conn.close()
-        typer.secho(f"Table : {DATABASE_TABLE}, Deleted Successfully", fg=typer.colors.GREEN)
+        # typer.secho(f"Table : {DATABASE_TABLE}, Deleted Successfully", fg=typer.colors.GREEN)
     except:
-        typer.secho(f"Failed to drop table: {DATABASE_TABLE}", fg=typer.colors.RED)
+        # typer.secho(f"Failed to drop table: {DATABASE_TABLE}", fg=typer.colors.RED)
 
 def insert(configName: str, accesskey: str, secretkey: str, region: str, bucket_name: str | None):
     query = f"""
@@ -42,9 +41,9 @@ def insert(configName: str, accesskey: str, secretkey: str, region: str, bucket_
         cursor.execute(query)
         conn.commit()
         conn.close()
-        typer.secho("Credential Saved Successfully!", fg=typer.colors.GREEN)
+        return True
     except:
-        typer.secho("Failed to Save credentials!", fg=typer.colors.RED)
+        return False
 
 def get_all_configs():
     conn, cursor = init_db()
