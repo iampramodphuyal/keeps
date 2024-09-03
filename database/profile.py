@@ -20,7 +20,7 @@ def init_db():
     conn.commit()
     return conn, cursor
 
-def create(username, password, hint, default, created_at):
+def create_profile(username, password, hint, default, created_at):
     query = f"""
     INSERT INTO {DATABASE_TABLE} (username, password, hint, default, created_at) VALUES ('{username}', '{password}', '{hint}', '{default}', '{created_at}');
     """
@@ -48,7 +48,7 @@ def list_profiles():
 
 def check_profile(username:str):
     query = f'''
-    SELECT {username} FROM {DATABASE_TABLE}
+    SELECT {username}, password FROM {DATABASE_TABLE}
     '''
     try:
         conn, cursor = init_db()
@@ -56,6 +56,20 @@ def check_profile(username:str):
         rows = cursor.fetchall()
         conn.close()
         return rows
+    except:
+        return False
+
+def login(username:str, password:str):
+    query = f'''
+    SELECT {username}, {password} FROM {DATABASE_TABLE}
+    '''
+    try:
+        conn, cursor = init_db()
+        cursor.execute(query)
+        row = cursor.fetchone()
+        if row:
+            print(row)
+            pass
     except:
         return False
 

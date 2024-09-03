@@ -1,11 +1,13 @@
 import typer
-from database.profile import create,list_profiles, check_profile
-
+from database.profile import create_profile,list_profiles, check_profile
+import hashlib
+import os
+from datetime import datetime
 
 profileApp = typer.Typer()
 
 @profileApp.command()
-def create_profile():
+def create():
     username = typer.prompt("Username")
     if check_profile(username):
         typer.secho(f"Username{username} Already Exists! Create new one", fg=typer.colors.RED)
@@ -22,10 +24,26 @@ def create_profile():
     if password != verifypwd:
         typer.secho(f"Password donot match", fg=typer.colors.RED)
         raise typer.Exit(code=1)
-
+    salt = os.urandom(32)
+    password = hashlib.pbkdf2_hmac('sha-256', password.encode('utf-8'), salt, 100000)
+    print(f"hashedpassword: {password}")
+    hashPwd = salt+password
     hint = typer.prompt("Password Hint")
+    default = 'Yes'
+    now = datetime.now()
+    created_at = now.strftime("%d/%m/%Y %H:%M:%S")
+    if create_profile(username, hashPwd, hint, default,created_at):
+        typer.secho(f"Username: {username} Added as Default Successfully!", fg=typer.colors.GREEN)
+    else:
+        typer.secho(f"Username: {username} Faild to save!", fg=typer.colors.RED)
 
 
 @profileApp.command()
 def login():
-    pass
+    username = typer.prompt("Username")
+    if check_profile(username):
+        password = typer.prompt("Password", hide_input=True)
+        pass
+    else:
+        typer.secho(f"Username{username} Not Found!", fg=typer.colors.RED)
+        raise typer.Exit(code=1)

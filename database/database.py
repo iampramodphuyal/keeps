@@ -19,18 +19,6 @@ def init_db():
     conn.commit()
     return conn, cursor
 
-def drop_db():
-    conn = sqlite3.connect(DATABASE_NAME)
-    cursor = conn.cursor()
-    query = f'''DROP TABLE {DATABASE_TABLE}'''
-    try:
-        # cursor.execute(query)
-        conn.commit()
-        conn.close()
-        # typer.secho(f"Table : {DATABASE_TABLE}, Deleted Successfully", fg=typer.colors.GREEN)
-    except:
-        # typer.secho(f"Failed to drop table: {DATABASE_TABLE}", fg=typer.colors.RED)
-
 def insert(configName: str, accesskey: str, secretkey: str, region: str, bucket_name: str | None):
     query = f"""
     INSERT INTO {DATABASE_TABLE} (name,accesskey,secretkey, region,bucket_name) VALUES ('{configName}', '{accesskey}', '{secretkey}', '{region}', '{bucket_name}');
