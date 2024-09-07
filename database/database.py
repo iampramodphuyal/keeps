@@ -1,6 +1,6 @@
 import sqlite3
 
-DATABASE_NAME = 'creds.db'
+DATABASE_NAME = 'keeps.db'
 DATABASE_TABLE = 'creds'
 
 

@@ -9,25 +9,26 @@ profileApp = typer.Typer()
 @profileApp.command()
 def create():
     username = typer.prompt("Username")
-    if check_profile(username):
-        typer.secho(f"Username{username} Already Exists! Create new one", fg=typer.colors.RED)
+    check = check_profile(username)
+    print(check)
+    if check:
+        typer.secho(f"Username: `{username}` Already Exists! Create New One!!", fg=typer.colors.RED)
         raise typer.Exit(code=1)
     password = typer.prompt("Password(min length 4)", hide_input=True)
     if not password:
-        typer.secho(f"Password Empty, enter a valid one", fg=typer.colors.RED)
+        typer.secho(f"Password Empty, Enter a Valid One", fg=typer.colors.RED)
     if len(password) < 4:
-        typer.secho(f"Password not of valid length, enter a valid one", fg=typer.colors.RED)
+        typer.secho(f"Password not of valid length, Enter a Valid One", fg=typer.colors.RED)
 
     verifypwd = typer.prompt("Verify Password", hide_input=True)
     if not verifypwd:
-        typer.secho(f"Verify Password Empty, enter a valid one", fg=typer.colors.RED)
+        typer.secho(f"Verify Password Empty, Enter a Valid One", fg=typer.colors.RED)
     if password != verifypwd:
-        typer.secho(f"Password donot match", fg=typer.colors.RED)
+        typer.secho(f"Password Donot Match", fg=typer.colors.RED)
         raise typer.Exit(code=1)
     salt = os.urandom(32)
     password = hashlib.pbkdf2_hmac('sha-256', password.encode('utf-8'), salt, 100000)
-    print(f"hashedpassword: {password}")
-    hashPwd = salt+password
+    hashPwd = (salt+password).hex()
     hint = typer.prompt("Password Hint")
     default = 'Yes'
     now = datetime.now()

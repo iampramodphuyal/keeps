@@ -1,10 +1,14 @@
 import typer
 from database.database import insert
+from database.profile import list_profiles
 
 addApp = typer.Typer()
 
 @addApp.command()
 def config():
+    if not list_profiles():
+        typer.secho("Error: No Profile Found, Create One First!!", fg=typer.colors.RED)
+        raise typer.Exit(code=1)
     configName = typer.prompt("Assign a Name for this credential")
     if not configName.strip():
         typer.secho("Error: A name is must", fg=typer.colors.RED)
