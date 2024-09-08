@@ -1,5 +1,6 @@
 
 import sqlite3
+from typing import Dict
 
 DATABASE_NAME = 'keeps.db'
 DATABASE_TABLE = 'profile'
@@ -36,12 +37,12 @@ def create_profile(username, password, hint, default, created_at):
 
 def list_profiles():
     query = f'''
-    SELECT username, default FROM {DATABASE_TABLE}
+    SELECT username, isDefault FROM {DATABASE_TABLE}
     '''
     try:
         conn, cursor = init_db()
         cursor.execute(query)
-        rows = cursor.fetchall() 
+        rows = dict(cursor.fetchone()) 
         conn.close()
         return rows
     except:
@@ -74,4 +75,15 @@ def login(username:str, password:str):
     except:
         return False
 
-
+def get_current_user():
+    query = f'''
+    SELECT id, isDefault FROM {DATABASE_TABLE} WHERE isDefault='Yes'
+    '''
+    try:
+        conn, cursor = init_db()
+        cursor.execute(query)
+        row = dict(cursor.fetchone())
+        conn.close()
+        return row
+    except:
+        return False

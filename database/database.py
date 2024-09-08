@@ -9,19 +9,20 @@ def init_db():
     cursor = conn.cursor()
     query = f'''CREATE TABLE IF NOT EXISTS {DATABASE_TABLE}(
     id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-    name TEXT,
-    accesskey TEXT,
-    secretkey TEXT,
-    region TEXT,
-    bucket_name TEXT
+    name TEXT NOT NULL,
+    configType TEXT NOT NULL,
+    enc_text TEXT NOT NULL,
+    profile_id integer NOT NULL,
+    created_at TEXT NOT NULL,
+    modified_at TEXT 
     ) '''
     cursor.execute(query)
     conn.commit()
     return conn, cursor
 
-def insert(configName: str, accesskey: str, secretkey: str, region: str, bucket_name: str | None):
+def insert(configType:str, configName:str, enc_text:str):
     query = f"""
-    INSERT INTO {DATABASE_TABLE} (name,accesskey,secretkey, region,bucket_name) VALUES ('{configName}', '{accesskey}', '{secretkey}', '{region}', '{bucket_name}');
+    INSERT INTO {DATABASE_TABLE} (name,configType, enc_text, created_at, profile_id) VALUES ('{configName}', '{configType}', '{enc_text}', '{created_at}', '{profile_id}');
     """
     print(f"query :: {query}")
     try:
