@@ -1,4 +1,6 @@
 import sqlite3
+from database.profile import get_current_user
+
 
 DATABASE_NAME = 'keeps.db'
 DATABASE_TABLE = 'creds'
@@ -20,11 +22,12 @@ def init_db():
     conn.commit()
     return conn, cursor
 
-def insert(configType:str, configName:str, enc_text:str):
+def insert(configType:str, configName:str, enc_text:str, created_at=str):
+    currentUser = get_current_user()
+    profile_id = currentUser['id']
     query = f"""
     INSERT INTO {DATABASE_TABLE} (name,configType, enc_text, created_at, profile_id) VALUES ('{configName}', '{configType}', '{enc_text}', '{created_at}', '{profile_id}');
     """
-    print(f"query :: {query}")
     try:
         conn, cursor = init_db()
         cursor.execute(query)

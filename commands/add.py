@@ -5,6 +5,8 @@ from helpers.helpers import enc_input
 import click
 import os
 import hashlib
+from datetime import datetime
+
 
 addApp = typer.Typer()
 
@@ -19,10 +21,11 @@ def config():
     if configType not in listedTypes:
         typer.secho("Error: Please Proceed with the listed type!")
     configName = typer.prompt("Assign a Name for this credential")
-    if not configName.strip():
+    if configName.strip() == '':
         typer.secho("Error: A name is must", fg=typer.colors.RED)
         raise typer.Exit(code=1)
-    attr, _configType= ''
+    attr = '' 
+    _configType= ''
     if configType == 2:
         accessKey = typer.prompt("Enter AccessKey")
         if not accessKey.strip():
@@ -55,10 +58,12 @@ def config():
             'password':pwd
         }
         _configType = 'general'
-    enc_text = enc_input(attr)
-    if insert(_configType, configName, enc_text):
-        typer.secho("Credential Saved Successfully!", fg=typer.colors.GREEN)
+    enc_text = enc_input(str(attr))
+    now = datetime.now()
+    created_at = now.strftime("%d/%m/%Y %H:%M:%S")
+    if insert(_configType, configName, enc_text,created_at):
+        typer.secho("Credential Saved Successfully!!", fg=typer.colors.GREEN)
     else:
-        typer.secho("Failed to Save credentials!", fg=typer.colors.RED)
+        typer.secho("Failed to Save credentials!!", fg=typer.colors.RED)
 if __name__ == "__main__":
     addApp()
